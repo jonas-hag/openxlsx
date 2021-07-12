@@ -1114,6 +1114,8 @@ Workbook$methods(
   }
 )
 
+# Function to check that a user provided sheet name or sheet index already
+# exists in the workbook
 Workbook$methods(
   validateSheet = function(sheetName) {
     if (!is.numeric(sheetName)) {
@@ -1136,6 +1138,25 @@ Workbook$methods(
     }
 
     which(replaceXMLEntities(sheet_names) == sheetName)
+  }
+)
+
+# Function to check that a new sheet name is valid
+Workbook$methods(
+  validateSheetName = function(newSheetName) {
+    newSheetName <- as.character(newSheetName)
+    
+    if (nchar(newSheetName) > 31) {
+      stop(paste0("sheetName '", newSheetName, "' too long! Max length is 31 characters."))
+    }
+    
+    if (grepl(pattern = "([/\\\\\\*'?\\[:\\]+])", perl = TRUE, x = sheetName)) {
+      stop("Illegal character in sheet names. Don't use the following [ ] * / \\\ ? :")
+    }
+    
+    if (nchar(sheetName) == 0) {
+      stop("The sheet name cannot be empty.")
+    }
   }
 )
 
